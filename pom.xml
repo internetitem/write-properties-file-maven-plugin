@@ -23,7 +23,8 @@
 		<url>https://internetitem.com/</url>
 	</organization>
 	<scm>
-		<connection>scm:git:https://github.com/internetitem/write-properties-file-maven-plugin</connection>
+		<connection>scm:git:https://github.com/internetitem/write-properties-file-maven-plugin.git</connection>
+		<developerConnection>scm:git:https://github.com/internetitem/write-properties-file-maven-plugin.git</developerConnection>
 		<url>https://github.com/internetitem/write-properties-file-maven-plugin</url>
 	</scm>
 	<developers>
@@ -32,6 +33,12 @@
 			<email>adam@batkin.net</email>
 		</developer>
 	</developers>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 
 	<build>
 		<pluginManagement>
