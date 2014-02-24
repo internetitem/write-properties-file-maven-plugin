@@ -5,13 +5,33 @@
 
 	<groupId>com.internetitem</groupId>
 	<artifactId>write-properties-file-maven-plugin</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>maven-plugin</packaging>
 
-	<name>Maven Plugin to Write a Properties File</name>
+	<name>Write a Properties File</name>
+	<description>Maven Plugin to write a Properties File</description>
+	<url>https://github.com/internetitem/write-properties-file-maven-plugin</url>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	<organization>
 		<name>Internet Item</name>
+		<url>https://internetitem.com/</url>
 	</organization>
+	<scm>
+		<connection>scm:git:https://github.com/internetitem/write-properties-file-maven-plugin</connection>
+		<url>https://github.com/internetitem/write-properties-file-maven-plugin</url>
+	</scm>
+	<developers>
+		<developer>
+			<name>Adam Batkin</name>
+			<email>adam@batkin.net</email>
+		</developer>
+	</developers>
 
 	<build>
 		<pluginManagement>
