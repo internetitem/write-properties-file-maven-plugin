@@ -17,7 +17,7 @@ import org.apache.maven.plugins.annotations.Parameter;
  * Create a Java Properties file
  * 
  * @author Adam Batkin <adam@batkin.net>
- *
+ * 
  */
 @Mojo(name = "write-properties-file")
 public class WritePropertiesFileMojo extends AbstractMojo {
@@ -34,8 +34,23 @@ public class WritePropertiesFileMojo extends AbstractMojo {
 	@Parameter(property = "properties", required = true)
 	private Properties properties;
 
+	/**
+	 * Create intermediate directories if necessary (defaults to true)
+	 */
+	@Parameter(property = "createDirectory", defaultValue = "true")
+	private boolean createDirectory;
+
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		getLog().info("Saving properties to file " + outputFile.getAbsolutePath());
+		File absoluteFile = outputFile.getAbsoluteFile();
+
+		File directory = absoluteFile.getParentFile();
+		if (!directory.exists()) {
+			getLog().info("Creating directory " + directory.getAbsolutePath());
+			directory.mkdirs();
+		}
+
+		String absolutePath = absoluteFile.getAbsolutePath();
+		getLog().info("Saving properties to file " + absolutePath);
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(outputFile);
@@ -44,7 +59,7 @@ public class WritePropertiesFileMojo extends AbstractMojo {
 			writer.close();
 			out.close();
 		} catch (IOException e) {
-			throw new MojoFailureException("Unable to save properties to file " + outputFile.getAbsolutePath() + ": " + e.getMessage(), e);
+			throw new MojoFailureException("Unable to save properties to file " + absolutePath + ": " + e.getMessage(), e);
 		} finally {
 			if (out != null) {
 				try {
