@@ -12,6 +12,9 @@ Maven plugin to write Properties Files
           <execution>
             <id>one</id>
             <phase>compile</phase>
+            <goals>
+                <goal>write-properties-file</goal>
+            </goals>
             <configuration>
               <filename>test.properties</filename>
               <properties>
