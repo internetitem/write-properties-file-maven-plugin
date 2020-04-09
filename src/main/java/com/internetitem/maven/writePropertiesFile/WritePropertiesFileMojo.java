@@ -67,8 +67,6 @@ public class WritePropertiesFileMojo extends AbstractMojo {
 	private boolean overrideProperties;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		System.out.println("mergeProperties: " + mergeProperties);
-		System.out.println("overrideProperties: " + overrideProperties);
 		File finalFile = new File(outputDirectory, filename).getAbsoluteFile();
 		String finalFilename = finalFile.getAbsolutePath();
 		File finalDirectory = finalFile.getParentFile();
