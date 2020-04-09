@@ -2,6 +2,7 @@ package com.internetitem.maven.writePropertiesFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
@@ -53,7 +54,21 @@ public class WritePropertiesFileMojo extends AbstractMojo {
 	@Parameter(property = "createDirectory", defaultValue = "true")
 	private boolean createDirectory;
 
+	/**
+	 * If properties already exist at the given output, we the results be combined (defaults to false)
+	 */
+	@Parameter(property = "mergeProperties", defaultValue = "false")
+	private boolean mergeProperties;
+
+	/**
+	 * Whether or not provided properties take precedence over existing properties (does nothing if mergeProperties is false, defaults to true)
+	 */
+	@Parameter(property = "overrideProperties", defaultValue = "true")
+	private boolean overrideProperties;
+
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		System.out.println("mergeProperties: " + mergeProperties);
+		System.out.println("overrideProperties: " + overrideProperties);
 		File finalFile = new File(outputDirectory, filename).getAbsoluteFile();
 		String finalFilename = finalFile.getAbsolutePath();
 		File finalDirectory = finalFile.getParentFile();
@@ -67,14 +82,15 @@ public class WritePropertiesFileMojo extends AbstractMojo {
 		getLog().info("Saving properties to file " + finalFilename);
 		FileOutputStream out = null;
 		try {
-			out = new FileOutputStream(finalFile);
-			OutputStreamWriter writer = new OutputStreamWriter(out, Charset.forName("UTF-8"));
 
 			String finalComment = comment;
 			if (comment != null && comment.trim().isEmpty()) {
 				finalComment = null;
 			}
-			properties.store(writer, finalComment);
+			Properties propertiesToWrite = obtainPotentiallyMergedProperties(finalFile);
+			out = new FileOutputStream(finalFile);
+			OutputStreamWriter writer = new OutputStreamWriter(out, Charset.forName("UTF-8"));
+			propertiesToWrite.store(writer, finalComment);
 			writer.close();
 			out.close();
 		} catch (IOException e) {
@@ -90,4 +106,25 @@ public class WritePropertiesFileMojo extends AbstractMojo {
 		}
 	}
 
+	private Properties obtainPotentiallyMergedProperties(File propertiesFile) throws MojoExecutionException {
+		if (!mergeProperties || !propertiesFile.exists()) {
+			return properties;
+		}
+		Properties preExistingProperties = new Properties();
+		try {
+			FileInputStream fileInputStream = new FileInputStream(propertiesFile);
+			preExistingProperties.load(fileInputStream);
+			fileInputStream.close();
+		} catch (IOException e) {
+			throw new MojoExecutionException("Error loading pre-existing properties file " + propertiesFile, e);
+		}
+		 return overrideProperties
+				 ? mergeProperties(preExistingProperties, properties)
+				 : mergeProperties(properties, preExistingProperties);
+	}
+
+	private Properties mergeProperties(Properties lowPriorityProperties, Properties highPriorityProperties) {
+		lowPriorityProperties.putAll(highPriorityProperties);
+		return lowPriorityProperties;
+	}
 }
