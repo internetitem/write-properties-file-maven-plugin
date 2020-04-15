@@ -116,9 +116,9 @@ public class WritePropertiesFileMojo extends AbstractMojo {
 		} catch (IOException e) {
 			throw new MojoExecutionException("Error loading pre-existing properties file " + propertiesFile, e);
 		}
-		 return overrideProperties
-				 ? mergeProperties(preExistingProperties, properties)
-				 : mergeProperties(properties, preExistingProperties);
+		return overrideProperties 
+				? mergeProperties(preExistingProperties, properties) 
+				: mergeProperties(properties, preExistingProperties);
 	}
 
 	private Properties mergeProperties(Properties lowPriorityProperties, Properties highPriorityProperties) {
