@@ -1,18 +1,18 @@
 package com.internetitem.maven.writePropertiesFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.util.Properties;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 
 /**
  * Create a Java Properties file
@@ -61,33 +61,22 @@ public class WritePropertiesFileMojo extends AbstractMojo {
 
 		if (!finalDirectory.exists()) {
 			getLog().info("Creating directory " + finalDirectoryName);
-			finalDirectory.mkdirs();
+            //noinspection ResultOfMethodCallIgnored
+            finalDirectory.mkdirs();
 		}
 
 		getLog().info("Saving properties to file " + finalFilename);
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream(finalFile);
-			OutputStreamWriter writer = new OutputStreamWriter(out, Charset.forName("UTF-8"));
-
-			String finalComment = comment;
-			if (comment != null && comment.trim().isEmpty()) {
-				finalComment = null;
-			}
-			properties.store(writer, finalComment);
-			writer.close();
-			out.close();
-		} catch (IOException e) {
-			throw new MojoFailureException("Unable to save properties to file " + finalFilename + ": " + e.getMessage(), e);
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (Exception e) {
-					// Ignore
-				}
-			}
-		}
-	}
+        try (FileOutputStream out = new FileOutputStream(finalFile)) {
+            try (OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
+                String finalComment = comment;
+                if (comment != null && comment.trim().isEmpty()) {
+                    finalComment = null;
+                }
+                properties.store(writer, finalComment);
+            }
+        } catch (IOException e) {
+            throw new MojoFailureException("Unable to save properties to file " + finalFilename + ": " + e.getMessage(), e);
+        }
+    }
 
 }
