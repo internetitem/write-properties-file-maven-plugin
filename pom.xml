@@ -5,7 +5,7 @@
 
 	<groupId>com.internetitem</groupId>
 	<artifactId>write-properties-file-maven-plugin</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>Write a Properties File</name>
@@ -14,7 +14,7 @@
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
@@ -34,39 +34,74 @@
 		</developer>
 	</developers>
 
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
+	<properties>
+		<maven.compiler.release>8</maven.compiler.release>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-plugin-plugin</artifactId>
-					<version>3.2</version>
-					<configuration>
-						<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-					</configuration>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.3.1</version>
 					<executions>
 						<execution>
-							<id>mojo-descriptor</id>
-							<phase>process-classes</phase>
+							<id>attach-sources</id>
 							<goals>
-								<goal>descriptor</goal>
+								<goal>jar-no-fork</goal>
 							</goals>
 						</execution>
 					</executions>
 				</plugin>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.8.0</version>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>3.2.4</version>
+					<executions>
+						<execution>
+							<id>sign-artifacts</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>sign</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
+					<version>3.1.1</version>
 					<configuration>
 						<tagNameFormat>v@{project.version}</tagNameFormat>
+						<releaseProfiles>release-profile</releaseProfiles>
 					</configuration>
 				</plugin>
-
+				<plugin>
+					<groupId>org.sonatype.plugins</groupId>
+					<artifactId>nexus-staging-maven-plugin</artifactId>
+					<version>1.7.0</version>
+					<extensions>true</extensions>
+					<configuration>
+						<serverId>ossrh</serverId>
+						<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+						<autoReleaseAfterClose>true</autoReleaseAfterClose>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -75,12 +110,26 @@
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>3.1.1</version>
+			<version>3.9.8</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven.plugin-tools</groupId>
 			<artifactId>maven-plugin-tools-annotations</artifactId>
-			<version>3.2</version>
+			<version>3.13.1</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+
 </project>
