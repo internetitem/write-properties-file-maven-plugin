@@ -16,9 +16,6 @@ import java.util.Properties;
 
 /**
  * Create a Java Properties file
- * 
- * @author Adam Batkin <adam@batkin.net>
- * 
  */
 @Mojo(name = "write-properties-file", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, threadSafe = true)
 public class WritePropertiesFileMojo extends AbstractMojo {
