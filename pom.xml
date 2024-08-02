@@ -4,7 +4,7 @@
 
 	<groupId>com.internetitem</groupId>
 	<artifactId>write-properties-file-maven-plugin</artifactId>
-	<version>2.0.0</version>
+	<version>2.0.1-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>Write a Properties File</name>
@@ -25,7 +25,7 @@
 		<connection>scm:git:https://github.com/internetitem/write-properties-file-maven-plugin.git</connection>
 		<developerConnection>scm:git:https://github.com/internetitem/write-properties-file-maven-plugin.git</developerConnection>
 		<url>https://github.com/internetitem/write-properties-file-maven-plugin</url>
-	  <tag>v2.0.0</tag>
+	  <tag>HEAD</tag>
   </scm>
 	<developers>
 		<developer>
